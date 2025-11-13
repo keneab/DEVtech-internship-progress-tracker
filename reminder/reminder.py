@@ -1,22 +1,26 @@
+import time
+from datetime import datetime
 
+print("🕒 Reminder App 🕒")
+reminder_msg = input("Enter your reminder (e.g., Meeting at 4 PM): ")
+reminder_time = input("Enter time for reminder (HH:MM 24-hour format): ")
 
+# Convert to datetime object for today
+now = datetime.now()
+reminder_hour, reminder_minute = map(int, reminder_time.split(":"))
+reminder_datetime = now.replace(hour=reminder_hour, minute=reminder_minute, second=0, microsecond=0)
 
-reminder = []
+# If reminder time already passed today, set it for tomorrow
+if reminder_datetime < now:
+    reminder_datetime = reminder_datetime.replace(day=now.day + 1)
+
+print(f"✅ Reminder set for {reminder_datetime.strftime('%H:%M')}")
+
+# Wait until time
 while True:
-    menu = input("Choose an option:\n1. Add Reminder\n2. View Reminders\n3. Exit\n> ")
-    if menu == '1':
-        reminder_text = input('Enter your reminder: ')
-        reminder.append(reminder_text)
-        print('Reminder added!')
-    elif menu == '2':
-        if len(reminder) != 0:
-            for rem in reminder:
-                print("Your reminders are ...")
-                print(f'- {rem}')
-            
-        else:
-            print('No reminders found.')
-    elif menu == '3':
-        print('Exiting the reminder app.')
+    current_time = datetime.now()
+    if current_time >= reminder_datetime:
+        print(f"\n🔔 Reminder: {reminder_msg} 🔔")
         break
-    
+    time.sleep(30)  # Check every 30 seconds
+
